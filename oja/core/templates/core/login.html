@@ -1,0 +1,92 @@
+{% extends 'core/base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+        <div class="sm:mx-auto sm:w-full sm:max-w-md">
+		<div class="bg-white shadow-xl rounded-xl px-8 pt-6 pb-8 sm:px-10">
+			<h2 class="text-center text-2xl sm:text-3xl font-extrabold text-blue-700 mb-6">
+				Sign in to your account
+			</h2>
+
+			<form method="post" action="." class="space-y-6">
+				{% csrf_token %}
+				<div>
+					<label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-black-700">
+						Username
+					</label>
+					<div class="mt-1 relative">	
+						{{ form.username }}
+						{% if form.username.errors %}
+						        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+								<svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+									<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd">
+								</svg>
+							</div>
+							{% endif %}
+					</div>
+					{% if form.username.errors %}
+					        <p class="mt-2 text-sm text-red-600">
+						        {% for error in form.username.errors %}
+							        {{ error }}
+							{% endfor %}
+						</p>
+					{% endif %}
+				</div>
+
+				<div>
+					<label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-black-700">
+						Password
+					</label>
+					<div class="mt-1 relative">
+						{{ form.password }}
+						{% if form.password.errors %}
+						        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+								<svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+									<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+								</svg>
+							</div>
+						{% endif %}
+					</div>
+					{% if form.password.errors %}
+					        <p class="mt-2 text-sm text-red-600">
+						        {% for error in form.password.errors %}
+							        {{ error }}
+							{% endfor %}
+						</p>
+					{% endif %}
+				</div>
+				
+				{% if form.non_field_errors %}
+				        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+						<div class="flex">
+							<svg class="h-5 w-5 text-red-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+								<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 11-2 0 1 1 0 012 0zm-1 4a1 1 0 011 1v2a1 1 0 11-2 0v-2a1 1 0 011-1z" clip-rule="evenodd" />
+							</svg>
+							<div class="text-sm text-red-700">
+								{{ form.non_field_errors }}
+							</div>
+						</div>
+					</div>
+				{% endif %}
+
+				<div>
+					<button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent
+						      rounded-lg shadow-sm text-sm font-semibold text-white 
+						      bg-blue-700 hover:bg-blue-600 focus:outline-none focus:ring-2 
+                                                      focus:ring-offset-2 focus:ring-blue-500 transition duration-300 
+		                                      ease-in-out transform hover:-translate-y-1 hover:scale-102">
+						Sign In
+					</button>
+				</div>
+			</form>
+
+			<div class="mt-6 text-center">
+				<p class="mt-2 text-sm text-black-600">
+				        Don't have an account?
+					<a href="{% url 'core:signup' %}" class="font-medium text-blue-700 hover:text-blue-600">
+						Sign up
+					</a>
+				</p>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,146 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Inbox{% endblock %}
+
+{% block content %}
+<!-- Desktop View -->
+<div id="desktop-view" class="hidden">
+	<div class="container mx-auto px-4 py-8 max-w-4xl">
+		<h1 class="text-2xl font-bold text-center text-blue-700">
+			Inbox
+		</h1>
+
+		<div class="space-y-4">
+			{% for conversation in conversations %}
+			        <a href="{% url 'conversation:detail' conversation.id %}"
+				   class="block bg-white shadow-lg rounded-xl p-6 
+					  hover:shadow-2xl transition-all duration-300 
+					  transform hover:scale-[1.02]">
+					<div class="flex items-center space-x-6">
+						<div class="w-20 h-20 flex-shrink-0">
+							<img src="{{ conversation.item.image.url }}" 
+							     class="w-full h-full object-cover rounded-lg 
+								    ring-2 ring-gray-100">
+							
+							<div class="flex-grow">
+								{% for member in conversation.members.all %}
+								        {% if member != request.user %}
+									        <div class="flex items-center justify-between mb-2">
+											<p class="font-semibold text-lg">
+												  {{ member.username }}
+											</p>
+											<span class="text-gray-500 text-sm">
+												{{ conversation.modified_at }}
+											</span>
+										</div>
+										<p class="text-gray-600">
+										        {{ conversation.item.name }}
+										</p>
+									{% endif %}
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</a>
+			{% empty %}
+			         <div class="text-center text-gray-500 py-12 bg-white rounded-xl shadow-lg">
+					 <p class="text-xl font-medium">No conversations yet</p>
+					 <p class="mt-2 text-gray-400">Start browsing items to begin chatting</p>
+				 </div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+
+<!-- Mobile View -->
+<div id="mobile-view" class="hidden">
+	<div class="min-h-screen w-full px-[4vw] py-[6vw]">
+		<h1 class="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 text-blue-700 text-center sm:text-left">
+			Inbox
+		</h1>
+	<div class="space-y-[3vw]">
+		{% for conversation in conversations %}
+		        <a href="{% url 'conversation:detail' conversation.id %}" 
+			   class="block bg-white shadow-lg rounded-[3vw] p-[4vw]">
+				<div class="flex items-center space-x-[4vw]">
+					<div class="w-[15vw] h-[15vw] flex-shrink-0">
+						<img src="{{ conversation.item.image.url }}" 
+						     class="w-full h-full object-cover rounded-[2vw] 
+							    ring-2 ring-gray-100">
+					</div>
+
+					<div class="flex-grow">
+						{% for member in conversation.members.all %}
+						        {% if member != request.user %}
+							        <div class="flex flex-col">
+									<p class="font-semibold text-[4vw]">
+									{{ member.username }}
+									</p>
+									<span class="text-gray-500 text-[3vw]">
+										{{ conversation.modified_at }}
+									</span>
+									<p class="text-gray-600 text-[3.5vw] mt-[1vw]">
+									{{ conversation.item.name }}
+									</p>
+								</div>
+							{% endif %}
+						{% endfor %}
+					</div>
+				</div>
+			</a>
+		{% empty %}
+		      <div class="text-center text-gray-500 py-[8vw] bg-white rounded-[3vw] shadow-lg">
+			      <p class="text-[4.5vw] font-medium">No conversations yet</p>
+			      <p class="mt-[2vw] text-[3.5vw] text-gray-400">Start browsing items to begin chatting</p>
+		      </div>
+		{% endfor %}
+		</div>
+	</div>
+</div>
+
+<style>
+    #mobile-view {
+	    -webkit-font-smoothing: antialiased;
+	    -moz-osx-font-smoothing: grayscale;
+    }
+
+    #desktop-view img,
+    #mobile-view img {
+	    opacity: 0;
+	    transition: opacity 0.3s ease-in-out;
+    }
+
+    #desktop-view img.loaded,
+    #mobile-view img.loaded {
+	    opacity: 1;
+    }
+</style>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const mobileView = document.getElementById('mobile-view');
+		const desktopView = document.getElementById('desktop-view');
+
+		function handleViewSwitch() {
+			if (window.innerWidth <= 768) {
+				mobileView.classList.remove('hidden');
+				desktopView.classList.add('hidden');
+			} else {
+				mobileView.classList.add('hidden');
+				desktopView.classList.remove('hidden');
+			}
+		}
+
+		// Initial setup
+		handleViewSwitch();
+		handleImages();
+
+		// Debounced resize handler
+		let resizeTimeout;
+		window.addEventListener('resize', function() {
+			clearTimeout(resizeTimeout);
+			resizeTimeout = setTimeout(handleViewSwitch, 250);
+		});
+	});
+</script>
+{% endblock %}

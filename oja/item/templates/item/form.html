@@ -1,0 +1,266 @@
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<!-- Desktop View -->
+<div id="desktop-view" class="hidden">
+	<div class="container mx-auto px-4 py-8 max-w-xl">
+		<h1 class="text-center text-3xl md:text-4xl font-extrabold text-blue-700
+			mb-6 leading-tight">
+			Add Your Market Items
+		</h1>
+		<form method="post" action="." enctype="multipart/form-data"
+			      class="bg-white shadow-2xl rounded-2xl p-8 md:p-12
+				     transform transition-all duration-300 
+				     hover:shadow-3xl">
+			{% csrf_token %}
+			<div class="space-y-6">
+				{% for field in form %}
+				        <div class="form-group">
+						<label class="block text-gray-700 text-sm font-bold mb-2"
+							for="{{ field.id_for_label }}">
+							{{ field.label }}{% if field.field.required %} *{% endif %}
+						</label>
+						{{ field }}
+						{% if field.help_text %}
+						        <p class="text-gray-500 text-xs mt-1">{{ field.help_text }}</p>
+					        {% endif %}
+						{% if field.errors %}
+						        <div class="text-red-500 text-sm mt-1">
+								{% for error in field.errors %}
+								        {{ error }}
+							        {% endfor %}
+							</div>
+						{% endif %}
+					</div>
+				{% endfor %}
+			</div>
+
+			{% if form.errors or form.non_field_errors %}
+			        <div class="mb-6 p-6 bg-red-100 border-l-4 border-red-500 rounded-r-xl">
+					{% for field in form %}
+			                        {% if field.errors %}
+						        <div class="text-red-600 mb-2">
+								{{ field.errors }}
+							</div>
+						{% endif %}
+					{% endfor %}
+
+					{% if form.non_field_errors %}
+					        <div class="text-red-600">
+							{{ form.non_field_errors }}
+						</div>
+					{% endif %}
+				</div>
+			{% endif %}
+
+			<button type="submit"
+				class="w-full mt-8 py-4 px-8 text-lg 
+				      text-white
+				      bg-blue-700
+				      hover:from-teal-600 hover:to-blue-700
+				      font-bold
+				      rounded-xl 
+				      transition-all duration-300
+				      transform hover:scale-105
+				      focus:outline-none
+				      focus:ring-4
+				      focus:ring-teal-300">
+				Submit
+			</button>
+		</form>
+	</div>
+</div>
+
+
+<!-- Mobile View with Scoped Scaling -->
+<div id="mobile-view" class="hidden">
+	<div class="mobile-content-scaler">
+		<div class="w-full px-4 py-6">
+			<h1 class="text-center text-2xl font-extrabold bg-clip-text text-blue-700
+				   mb-4 leading-tight">
+				Add Your Market Items
+			</h1>
+
+			<form method="post" action="." enctype="multipart/form-data"
+				class="bg-white shadow-xl rounded-xl p-5">
+				{% csrf_token %}
+				<div class="space-y-4">
+					{% for field in form %}
+			                        <div class="form-group">
+							<label class="block text-gray-700 text-sm font-bold mb-2"
+								for="{{ field.id_for_label }}">
+								{{ field.label }}{% if field.field.required %} *{% endif %}
+							</label>
+							<div class="form-field-wrapper">
+								{{ field }}
+							</div>
+							{% if field.help_text %}
+							        <p class="text-gray-500 text-xs mt-1">{{ field.help_text }}</p>
+							{% endif %}
+						        {% if field.errors %}
+							        <div class="text-red-500 text-sm mt-1">
+									{% for error in field.errors %}
+									        {{ error }}
+									{% endfor %}
+								</div>
+							{% endif %}
+						</div>
+					{% endfor %}
+				</div>
+
+				{% if form.errors or form.non_field_errors %}
+				        <div class="mb-4 p-4 bg-red-100 border-l-4 border-red-500 rounded-r-xl">
+						{% for field in form %}
+					                {% if field.errors %}
+						                <div class="text-red-600 mb-2 text-sm">
+									{{ field.errors }}
+								</div>
+							{% endif %}
+						{% endfor %}
+
+						{% if form.non_field_errors %}
+						        <div class="text-red-600 text-sm">
+								{{ form.non_field_errors }}
+							</div>
+						{% endif %}
+					</div>
+				{% endif %}
+
+				<button type="submit"
+					class="w-full mt-5 py-3 px-4 text-lg
+					       bg-blue-700
+					       hover:from-teal-600 hover:to-blue-700
+					       text-white font-bold
+					       rounded-xl
+					       transition-all duration-300
+					       transform hover:scale-105
+					       focus:outline-none
+					       focus:ring-4
+					       focus:ring-teal-300">
+					Submit
+			</form>
+		</div>
+	</div>
+</div>
+
+
+<style>
+    /* Scoped container for mobile scaling */
+    .mobile-content-scaler {
+	    font-size: 16px;
+    }
+
+    #mobile-view {
+	    font-size: inherit;
+    }
+
+    .form-field-wrapper input[type="text"],
+    .form-field-wrapper input[type="number"],
+    .form-field-wrapper input[type="file"],
+    .form-field-wrapper textarea,
+    .form-field-wrapper select {
+	    width: 100%;
+	    padding: 0.75rem 1rem;
+	    border-radius: 0.5rem;
+	    border: 1px solid #e2e8f0;
+	    font-size: 1rem;
+    }
+
+    .form-field-wrapper input:focus,
+    .form--wrapper textarea:focus,
+    .form-field-wrapper select:focus {
+	    outline: none;
+	    border-color: #0d9488;
+	    box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
+    }
+
+    .form-field-wrapper input.error,
+    .form-field-wrapper textarea.error,
+    .form-field-wrapper select.error {
+	    border-color: #ef4444;
+    }
+
+    @media (max-width: 768px) {
+	    .mobile-content-scaler {
+		    /* Scale based on viewport width but maintain reasonable proportions */
+		    font-size: calc(14px + (16 - 14) * ((100vw - 320px) / (768 - 320)));
+	    }
+
+	    .mobile-content-scaler input,
+	    .mobile-content-scaler select,
+	    .mobile-content-scaler textarea {
+		    font-size: 1rem;
+	    }
+
+	    /* Minimum size protection for very small screens */
+	    @media (max-width: 320px) {
+		    .mobile-content-scaler {
+			    font-size: 14px;
+		    }
+	    }
+</style>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const mobileView = document.getElementById('mobile-view');
+		const desktopView = document.getElementById('desktop-view');
+		const form = document.querySelector('form');
+		const imageInput = document.querySelector('input[type="file"]');
+
+		// View switching logic
+		function handleViewSwitch() {
+			if (window.innerWidth <= 768) {
+				mobileView.classList.remove('hidden');
+				desktopView.classList.add('hidden');
+			} else {
+				mobileView.classList.add('hidden');
+				desktopView.classList.remove('hidden');
+			}
+		}
+
+		// Form validation
+		form.addEventListener('submit', function(e) {
+			if (!imageInput.files || !imageInput.files[0]) {
+				e.preventDefault();
+				field  // Create or update error message
+				let errorDiv = imageInput.parentElement.querySelector('.text-red-500');
+				if (!errorDiv) {
+					errorDiv = document.createElement('div');
+					errorDiv.className = 'text-red-500 text-sm mt-1';
+					imageInput.parentElement.appendChild(errorDiv);
+				}
+				errorDiv.textContent = 'Please upload an image for your item.';
+
+				// Highlight the input field
+				imageInput.classList.add('error');
+
+				// Scroll to the image input
+				imageInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			}
+		});
+
+		// Remove error styling when user selects a file
+		imageInput.addEventListener('change', function() {
+			if (this.files && this.files[0]) {
+				this.classList.remove('error');
+				const errorDiv = this.parentElement.querySelector('.text-red-500');
+				if (errorDiv) {
+					errorDiv.remove();
+				}
+			}
+		});
+
+		// Initial view check
+		handleViewSwitch();
+
+		// Debounced resize handler
+		let resizeTimeout;
+		window.addEventListener('resize', function() {
+			clearTimeout(resizeTimeout);
+			resizeTimeout = setTimeout(handleViewSwitch, 250);
+		});
+	});
+</script>
+{% endblock %}
